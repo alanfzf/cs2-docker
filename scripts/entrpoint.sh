@@ -2,6 +2,8 @@
 
 echo "Starting CS2 server installation"
 
+mkdir -p "${STEAM_CS_DIR}" || true
+
 # fix for cs
 eval bash "${STEAM_CMD_DIR}/steamcmd.sh" +force_install_dir "${STEAM_CS_DIR}" \
   +login anonymous \

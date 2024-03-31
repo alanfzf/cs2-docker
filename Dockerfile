@@ -22,6 +22,7 @@ RUN useradd -m -s /bin/bash steam
 # download cs
 FROM build_phase as cs_server
 USER steam
+
 WORKDIR ${STEAM_CMD_DIR}
 RUN curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
@@ -32,6 +33,3 @@ CMD ["bash", "entrypoint.sh"]
 
 EXPOSE 27015/tcp \
   27015/udp \
-  27020/udp \
-  27005/udp \
-  26900/udp
