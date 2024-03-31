@@ -12,10 +12,13 @@ USER root
 RUN echo 'root:steamcmd' | chpasswd
 
 # Intall packages
+RUN dpkg --add-architecture i386
+
 RUN apt-get update && apt-get install -y \
-  curl \
-  libicu-dev \
-  sudo
+      curl \
+      libicu-dev \
+      sudo \
+      lib32gcc-s1
 
 RUN useradd -m -s /bin/bash steam
 
