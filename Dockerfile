@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN useradd -m -s /bin/bash steam
 
-# download cs
+# Setup cs server
 FROM build_phase as cs_server
 USER steam
 
