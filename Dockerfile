@@ -1,38 +1,34 @@
-FROM ubuntu:22.04 as build_phase
+FROM ubuntu:22.04 AS build
 
-# environment variables
+USER root
+
+# Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-# steam env variables
 ENV STEAM_HOME="/home/steam"
 ENV STEAM_CMD_DIR="${STEAM_HOME}/cmd"
 ENV STEAM_CS_DIR="${STEAM_HOME}/cs2"
 
-# Define the root user
-USER root
-RUN echo 'root:steamcmd' | chpasswd
+# Install required packages
+RUN echo 'root:steamcmd' | chpasswd \
+      && useradd -ms /bin/bash steam \
+      && dpkg --add-architecture i386 \
+      && apt-get update && apt-get install -y --no-install-recommends \
+      curl ca-certificates libicu-dev sudo lib32gcc-s1 \
+      && rm -rf /var/lib/apt/lists/*
 
-# Intall packages
-RUN dpkg --add-architecture i386
+FROM build AS cs2
 
-RUN apt-get update && apt-get install -y \
-      curl \
-      libicu-dev \
-      sudo \
-      lib32gcc-s1
-
-RUN useradd -m -s /bin/bash steam
-
-# Setup cs server
-FROM build_phase as cs_server
 USER steam
 
+# Install SteamCMD
 WORKDIR ${STEAM_CMD_DIR}
 RUN curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
-# run cs
+# Set up the CS server
 WORKDIR ${STEAM_CS_DIR}
-COPY --chmod=0755 ./scripts/entrpoint.sh "${STEAM_CS_DIR}/entrypoint.sh"
-CMD ["bash", "entrypoint.sh"]
+COPY --chmod=0755 scripts/entrypoint.sh ./entrypoint.sh
 
 EXPOSE 27015/tcp \
-  27015/udp \
+       27015/udp
+
+CMD ["bash", "./entrypoint.sh"]
