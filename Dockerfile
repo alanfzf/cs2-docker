@@ -31,4 +31,4 @@ COPY --chmod=0755 scripts/entrypoint.sh ./entrypoint.sh
 EXPOSE 27015/tcp \
        27015/udp
 
-CMD ["bash", "./entrypoint.sh"]
+CMD ["bash", "entrypoint.sh"]
