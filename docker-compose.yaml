@@ -1,0 +1,13 @@
+services:
+  cs2-server:
+    image: alanfzf/cs2:latest
+    build: .
+    ports:
+      - "27015:27015/udp"
+      - "27015:27015/tcp"
+    env_file:
+      - .env
+    volumes:
+      - cs2:/home/steam/
+volumes:
+  cs2:
